@@ -28,10 +28,6 @@ public class LeitorXLS {
 
 	public void carregaArquivo(String filePath) {
 		this.file = new File(filePath);
-		if (file.isAbsolute())
-			System.out.println("Ok");
-		else
-			System.out.println("No");
 	}
 
 	public void processaArquivo() {
@@ -47,7 +43,7 @@ public class LeitorXLS {
 			for (int i = 0; i < linhas; i++) {
 				if (!frases.containsKey(sheet.getCell(3, i).getContents())) {
 					frases.put(sheet.getCell(3, i).getContents(), removeAcentos(" "+removePalavras(sheet.getCell(12, i)
-									.getContents())));
+									.getContents())+" "));
 
 				}
 
@@ -66,7 +62,7 @@ public class LeitorXLS {
 	private String removePalavras(String umaFrase) {
 		for (String string : palavrasInuteis) {
 			umaFrase = umaFrase.replaceAll(" " + string + " ", " ").replaceAll(
-					"\\S*@\\S*|http\\S*|(kk+)|(KK+)|(kk+)K", "");
+					"[\\[\\]|.,+\\-\\~?!:;\"^'\\/*()]|\\S*@\\S*|http\\S*|(kk+)|(KK+)|(kk+)K", "");
 		}
 
 		return umaFrase;
