@@ -86,7 +86,7 @@ public class LeitorXLS {
 		try {
 			String content = new String(
 					Files.readAllBytes(Paths
-							.get("C:\\Users\\Leuson\\Documents\\GitHub\\redessociais_2015.2\\Crawler\\stopwords.txt")),
+							.get("stopwords.txt")),
 					StandardCharsets.ISO_8859_1);
 
 			String[] palavrasFile = content.split(",");
