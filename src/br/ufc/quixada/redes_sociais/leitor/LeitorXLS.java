@@ -47,12 +47,13 @@ public class LeitorXLS {
 			int linhas = sheet.getRows();
 
 			for (int i = 0; i < linhas; i++) {
-				if (!frases.containsKey(sheet.getCell(3, i).getContents())) {
+				if (frases.containsKey(sheet.getCell(3, i).getContents()) == false) {
 					frases.put(
 							sheet.getCell(3, i).getContents(),
-							removeAcentos(" "
-									+ removePalavras(sheet.getCell(12, i)
-											.getContents()) + " "));
+							removePalavras(" "
+									+ removeAcentos(sheet.getCell(12, i)
+											.getContents()))
+									+ " ");
 
 				}
 
@@ -74,7 +75,7 @@ public class LeitorXLS {
 			umaFrase = umaFrase
 					.replaceAll(" " + string + " ", " ")
 					.replaceAll(
-							"[\\[\\]|.,+\\-\\~?!:;\"^'\\/*()]|\\S*@\\S*|http\\S*|(kk+)|(KK+)|(kk+)K",
+							"[\\[\\]|.,+\\-\\~?!:;\"^'\\/*()\n]|\\S*@\\S*|http\\S*|(kk+)|(KK+)|(kk+)K",
 							"");
 		}
 
