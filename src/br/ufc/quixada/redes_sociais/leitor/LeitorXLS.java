@@ -86,7 +86,7 @@ public class LeitorXLS {
 		try {
 			String content = new String(
 					Files.readAllBytes(Paths
-							.get("C:\\Users\\Leuson\\Documents\\GitHub\\redessociais_2015.2\\Crawler\\stopwords.txt")),
+							.get("stopwords.txt")),
 					StandardCharsets.ISO_8859_1);
 
 			String[] palavrasFile = content.split(",");
@@ -98,7 +98,6 @@ public class LeitorXLS {
 				System.err.println(string);
 			}
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 	}
@@ -132,7 +131,6 @@ public class LeitorXLS {
 					novaPalavra += string.charAt(i);
 					i++;
 				}
-				// novaPalavra += novaPalavra.replaceAll(" ", "");
 				if (novaPalavra.contains(" ") == false
 						&& novaPalavra.length() > 0) {
 					if (palavrasMencoes.get(novaPalavra) == null) {
@@ -153,7 +151,7 @@ public class LeitorXLS {
 			throws RowsExceededException, WriteException {
 		
 		File novaPlanilha = new File(
-				"C:\\Users\\Leuson\\workspaceWEB2\\AnaliseSentimentosRedesSocias\\Assets\\tweetsTeste.xls");
+				"tweetsTeste.xls");
 		WritableWorkbook writableWorkbook;
 		try {
 			writableWorkbook = Workbook.createWorkbook(novaPlanilha);
@@ -178,7 +176,6 @@ public class LeitorXLS {
 			writableWorkbook.write();
 			writableWorkbook.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
