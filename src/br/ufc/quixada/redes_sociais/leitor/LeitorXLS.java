@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -14,6 +15,11 @@ import jxl.Sheet;
 import jxl.Workbook;
 import jxl.WorkbookSettings;
 import jxl.read.biff.BiffException;
+import jxl.write.Label;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
+import jxl.write.WriteException;
+import jxl.write.biff.RowsExceededException;
 
 public class LeitorXLS {
 	private File file;
@@ -30,7 +36,7 @@ public class LeitorXLS {
 		this.file = new File(filePath);
 	}
 
-	public void processaArquivo() {
+	public void processaArquivo() throws RowsExceededException, WriteException {
 		Workbook workbook;
 		try {
 			WorkbookSettings configuracao = new WorkbookSettings();
@@ -42,13 +48,17 @@ public class LeitorXLS {
 
 			for (int i = 0; i < linhas; i++) {
 				if (!frases.containsKey(sheet.getCell(3, i).getContents())) {
-					frases.put(sheet.getCell(3, i).getContents(), removeAcentos(" "+removePalavras(sheet.getCell(12, i)
-									.getContents())+" "));
+					frases.put(
+							sheet.getCell(3, i).getContents(),
+							removeAcentos(" "
+									+ removePalavras(sheet.getCell(12, i)
+											.getContents()) + " "));
 
 				}
 
 			}
 			printFrases();
+			citacoesPalavras();
 		} catch (BiffException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -61,8 +71,11 @@ public class LeitorXLS {
 
 	private String removePalavras(String umaFrase) {
 		for (String string : palavrasInuteis) {
-			umaFrase = umaFrase.replaceAll(" " + string + " ", " ").replaceAll(
-					"[\\[\\]|.,+\\-\\~?!:;\"^'\\/*()]|\\S*@\\S*|http\\S*|(kk+)|(KK+)|(kk+)K", "");
+			umaFrase = umaFrase
+					.replaceAll(" " + string + " ", " ")
+					.replaceAll(
+							"[\\[\\]|.,+\\-\\~?!:;\"^'\\/*()]|\\S*@\\S*|http\\S*|(kk+)|(KK+)|(kk+)K",
+							"");
 		}
 
 		return umaFrase;
@@ -102,5 +115,70 @@ public class LeitorXLS {
 			string = string.replaceAll("[^\\p{ASCII}]", "");
 		}
 		return string;
+	}
+
+	private void citacoesPalavras() throws RowsExceededException,
+			WriteException {
+		Collection<String> conjuntoPalavras = frases.values();
+		HashMap<String, Integer> palavrasMencoes = new HashMap<String, Integer>();
+		int i = 0;
+		String novaPalavra = "";
+		for (String string : conjuntoPalavras) {
+			i = 0;
+			novaPalavra = "";
+			while (i < string.length()) {
+				while (string.charAt(i) != ' ') {
+					novaPalavra += string.charAt(i);
+					i++;
+				}
+				// novaPalavra += novaPalavra.replaceAll(" ", "");
+				if (novaPalavra.contains(" ") == false
+						&& novaPalavra.length() > 0) {
+					if (palavrasMencoes.get(novaPalavra) == null) {
+						palavrasMencoes.put(novaPalavra, 1);
+					} else {
+						palavrasMencoes.put(novaPalavra,
+								palavrasMencoes.get(novaPalavra) + 1);
+					}
+				}
+				i++;
+				novaPalavra = "";
+			}
+		}
+		printMencoes(palavrasMencoes);
+	}
+
+	private void printMencoes(HashMap<String, Integer> mencoes)
+			throws RowsExceededException, WriteException {
+		File novaPlanilha = new File(
+				"C:\\Users\\Leuson\\Documents\\GitHub\\redessociais_2015.2\\Crawler\\tweetsTeste.xls");
+		WritableWorkbook writableWorkbook;
+		try {
+			writableWorkbook = Workbook.createWorkbook(novaPlanilha);
+			WritableSheet writableSheet = writableWorkbook.createSheet(
+					"Sheet1", 0);
+			Label labelPalavra = new Label(0, 0, "Palavra");
+			Label labelValor = new Label(1, 0, "Valor");
+			writableSheet.addCell(labelPalavra);
+			writableSheet.addCell(labelValor);
+			int i = 1;
+			Set<String> chaves = mencoes.keySet();
+			for (String string : chaves) {
+				System.out.println("Chave: " + string + "-Valor: "
+						+ mencoes.get(string));
+				if (string.contains(" ") == false && string.length() > 0) {
+					writableSheet.addCell(new Label(0, i, string));
+					writableSheet.addCell(new Label(1, i, mencoes.get(string)
+							+ ""));
+					i++;
+				}
+			}
+			writableWorkbook.write();
+			writableWorkbook.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 }
