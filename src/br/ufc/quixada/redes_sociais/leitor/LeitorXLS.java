@@ -151,8 +151,9 @@ public class LeitorXLS {
 
 	private void printMencoes(HashMap<String, Integer> mencoes)
 			throws RowsExceededException, WriteException {
+		
 		File novaPlanilha = new File(
-				"C:\\Users\\Leuson\\Documents\\GitHub\\redessociais_2015.2\\Crawler\\tweetsTeste.xls");
+				"C:\\Users\\Leuson\\workspaceWEB2\\AnaliseSentimentosRedesSocias\\Assets\\tweetsTeste.xls");
 		WritableWorkbook writableWorkbook;
 		try {
 			writableWorkbook = Workbook.createWorkbook(novaPlanilha);
