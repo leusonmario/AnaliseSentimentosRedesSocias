@@ -10,10 +10,10 @@ from tweepy import Stream
 import time
  
 # Consumer keys and access tokens, used for OAuth
-consumer_key = 'HOXQGnZkXlunsvLByKPpmNG6b'
-consumer_secret = 'yxkfVWR2JZ2neXk4y9FYJZb3EFjPNycIauEsfhvB8vtqUemDxX'
-access_token = '326313390-wnvmRZeLGBg4gsnEX2XNLgT6RNTqMrK4EIXybAKu'
-access_token_secret = '0zaN1el46tWJTAGeD7MYxPMmdZkPTT5EdYUUSYQZtqWe3'
+consumer_key = ''
+consumer_secret = ''
+access_token = ''
+access_token_secret = ''
 
 # OAuth process, using the keys and tokens
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
@@ -25,15 +25,17 @@ worksheet = workbook.add_sheet(u'Tweets')
 
 api = tweepy.API(auth)
 #q = 'x-men apocalipse #xmen OR #x-men OR #xmenapocalipse OR #x-menapocalipse lang:pt'
-q = 'starwars odespertardaforca odespertardaforça starwarsbr #starwars OR #odespertardaforca OR #odespertardaforça OR #starwarsbr lang:pt'
-
-count = 100
+#'starwars odespertardaforca odespertardaforça starwarsbr #starwars OR #odespertardaforca OR #odespertardaforça OR #starwarsbr lang:pt'
+q = '#NaoVaiTerGolpe OR #VemPraRua' 
+#INICIO 20:44 UFC
+#INICIO 11:47 golpe
+count = 2000
 search_results = api.search(q=q, count=count)
 
 iteradorTweets = 0
 
 now = datetime.datetime.now()
-finalParada = now.replace(hour=15, minute=20, second=0, microsecond=0)
+finalParada = now.replace(day=13, hour=19, minute=0, second=0, microsecond=0)
 
 worksheet.write(iteradorTweets,0,'TweetCriacao')
 worksheet.write(iteradorTweets,1,'TweetID')
@@ -59,14 +61,14 @@ while (now < finalParada):
 		#if iteradorTweets%10 == 0:
 			#idUltimo = data.id
 		if not data.retweeted and 'RT @' not in data.text:
-			print(data.retweeted)
+			print(iteradorTweets)
 			idUltimo = data.id
 			worksheet.write(iteradorTweets,0,data.created_at)
 			worksheet.write(iteradorTweets,1,data.id)
 			worksheet.write(iteradorTweets,2,data.user.screen_name)
 			worksheet.write(iteradorTweets,3,data.user.id)
 			worksheet.write(iteradorTweets,4,data.user.created_at)
-	
+
 			worksheet.write(iteradorTweets,5,data.user.favourites_count)
 			worksheet.write(iteradorTweets,6,data.user.statuses_count)
 			worksheet.write(iteradorTweets,7,data.user.friends_count)
@@ -79,9 +81,8 @@ while (now < finalParada):
 			worksheet.write(iteradorTweets,14,data.in_reply_to_screen_name)
 			worksheet.write(iteradorTweets,15,data.in_reply_to_status_id)
 			iteradorTweets+=1
-		else:
-			print (data.text.encode('utf-8'))
-	workbook.save('tweets-famoso.xls')
+				
+	workbook.save('tweets-nao-golpe-vem-pra-rua-3.xls')
 	time.sleep(5)
 	now = datetime.datetime.now()
 

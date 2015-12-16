@@ -61,10 +61,8 @@ public class LeitorXLS {
 			printFrases();
 			citacoesPalavras();
 		} catch (BiffException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
