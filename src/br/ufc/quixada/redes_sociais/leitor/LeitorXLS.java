@@ -16,6 +16,9 @@ import jxl.WorkbookSettings;
 import jxl.read.biff.BiffException;
 import jxl.write.WriteException;
 import jxl.write.biff.RowsExceededException;
+import br.ufc.quixada.redes_sociais.analise.AnaliseHashtag;
+import br.ufc.quixada.redes_sociais.analise.AnaliseHashtagPalavra;
+import br.ufc.quixada.redes_sociais.analise.AnalisePalavra;
 
 public class LeitorXLS {
 	private File file;
@@ -23,12 +26,16 @@ public class LeitorXLS {
 	private ArrayList<String> palavrasInuteis;
 	private AnaliseHashtag analiseHashtag;
 	private AnalisePalavra analisePalavra;
+	private HashMap<String, Integer> hashtagsMencoes;
+	private HashMap<String, Integer> palavrasMencoes;
 
 	public LeitorXLS() {
 		this.tweets = new HashMap<String, String>();
 		this.palavrasInuteis = new ArrayList<String>();
 		this.analiseHashtag = new AnaliseHashtag();
 		this.analisePalavra = new AnalisePalavra();
+		this.hashtagsMencoes = new HashMap<String, Integer>();
+		this.palavrasMencoes = new HashMap<String, Integer>();
 		carregaPalavrasInuteis();
 	}
 
@@ -59,8 +66,10 @@ public class LeitorXLS {
 
 			}
 			printFrases();
-			analisePalavra.analisaPalavras(tweets);
-			analiseHashtag.analisarHashtags(tweets);
+			palavrasMencoes = analisePalavra.analisaPalavras(tweets);
+			hashtagsMencoes= analiseHashtag.analisarHashtags(tweets);
+			AnaliseHashtagPalavra analiseHashtagPalavra = new AnaliseHashtagPalavra();
+			analiseHashtagPalavra.analiseMencoesPalavraHashtag(tweets);
 		} catch (BiffException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -77,8 +86,7 @@ public class LeitorXLS {
 							"([k|K]+[K|k]*[k|K]+)|([z|Z]+[Z|z]*[z|Z]+)"
 							+ "|(http|https):\\/\\/([\\w-]+\\.)+[\\w-]+(\\/[\\w- ./?%&=]*)"
 							+ "|(\\S*@*)([\\w-]+\\.)+[\\w-]+(\\/[\\w- ./?%&=]*)?|(\\s\\d+\\s)|(\\s+\\W+\\s+)"
-							+ "|(\\v+)|(\\s\\W+\\s)",
-							"");
+							+ "|(\\v+)|(\\s\\W+\\s)|(\\s\\w\\s)|(@\\w*)|[^\\w#\\s]","");
 		}
 
 		return umaFrase;
