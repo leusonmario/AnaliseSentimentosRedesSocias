@@ -59,7 +59,7 @@ public class AnaliseHashtag {
 				novaPalavra = "";
 			}
 		}
-		printMencoesHashtags(palavrasMencoes);
+		//printMencoesHashtags(palavrasMencoes);
 		return palavrasMencoes;
 	}
 

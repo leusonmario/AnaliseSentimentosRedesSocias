@@ -83,8 +83,10 @@ public class LeitorXLS {
 			umaFrase = umaFrase
 					.replaceAll(" " + string + " ", " ")
 					.replaceAll(
-							"[\\[\\]|.,_+\\-\\~?!:;\"^'\\/*()\n]|\\S*@\\S*|http\\S*|(kk+)|(KK+)|(kk+)K",
-							"");
+							"([k|K]+[K|k]*[k|K]+)|([z|Z]+[Z|z]*[z|Z]+)"
+							+ "|(http|https):\\/\\/([\\w-]+\\.)+[\\w-]+(\\/[\\w- ./?%&=]*)"
+							+ "|(\\S*@*)([\\w-]+\\.)+[\\w-]+(\\/[\\w- ./?%&=]*)?|(\\s\\d+\\s)|(\\s+\\W+\\s+)"
+							+ "|(\\v+)|(\\s\\W+\\s)|(\\s\\w\\s)|(@\\w*)|[^\\w#\\s]","");
 		}
 
 		return umaFrase;

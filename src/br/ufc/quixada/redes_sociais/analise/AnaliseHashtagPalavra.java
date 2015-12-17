@@ -25,8 +25,10 @@ public class AnaliseHashtagPalavra {
 						this.mencoesPalavraNVTG);
 			}
 		}
-		printMencoes(mencoesPalavraVPR);
-		printMencoes(mencoesPalavraNVTG);
+		// printMencoes(mencoesPalavraVPR);
+		// printMencoes(mencoesPalavraNVTG);
+		printMencoesHashtag(mencoesPalavraVPR, "VemPraRua");
+		printMencoesHashtag(mencoesPalavraNVTG, "NaoVaiTerGolpe");
 	}
 
 	private void analisaPalavraTweet(String tweet, String hashtag,
@@ -57,6 +59,15 @@ public class AnaliseHashtagPalavra {
 		System.out.println("*******************************");
 		for (String string : palavra) {
 			System.out.println(string + ";" + mencoes.get(string));
+		}
+	}
+
+	private void printMencoesHashtag(HashMap<String, Integer> mencoes,
+			String hashtag) {
+		Collection<String> palavra = mencoes.keySet();
+		System.out.println("*******************************");
+		for (String string : palavra) {
+			System.out.println(hashtag + ";" + string);
 		}
 	}
 
