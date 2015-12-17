@@ -23,12 +23,16 @@ import jxl.write.biff.RowsExceededException;
 
 public class LeitorXLS {
 	private File file;
-	private HashMap<String, String> frases;
+	private HashMap<String, String> tweets;
 	private ArrayList<String> palavrasInuteis;
+	private AnaliseHashtag analiseHashtag;
+	private AnalisePalavra analisePalavra;
 
 	public LeitorXLS() {
-		frases = new HashMap<String, String>();
-		palavrasInuteis = new ArrayList<String>();
+		this.tweets = new HashMap<String, String>();
+		this.palavrasInuteis = new ArrayList<String>();
+		this.analiseHashtag = new AnaliseHashtag();
+		this.analisePalavra = new AnalisePalavra();
 		carregaPalavrasInuteis();
 	}
 
@@ -47,8 +51,8 @@ public class LeitorXLS {
 			int linhas = sheet.getRows();
 
 			for (int i = 0; i < linhas; i++) {
-				if (frases.containsKey(sheet.getCell(3, i).getContents()) == false) {
-					frases.put(
+				if (tweets.containsKey(sheet.getCell(3, i).getContents()) == false) {
+					tweets.put(
 							sheet.getCell(3, i).getContents(),
 							removePalavras(" "
 									+ removeAcentos(sheet.getCell(12, i)
@@ -59,7 +63,8 @@ public class LeitorXLS {
 
 			}
 			printFrases();
-			citacoesPalavras();
+			analisePalavra.analisaPalavras(tweets);
+			analiseHashtag.analisarHashtags(tweets);
 		} catch (BiffException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -82,10 +87,8 @@ public class LeitorXLS {
 
 	private void carregaPalavrasInuteis() {
 		try {
-			String content = new String(
-					Files.readAllBytes(Paths
-							.get("stopwords.txt")),
-					StandardCharsets.ISO_8859_1);
+			String content = new String(Files.readAllBytes(Paths
+					.get("Assets/stopwords.txt")), StandardCharsets.ISO_8859_1);
 
 			String[] palavrasFile = content.split(",");
 
@@ -101,9 +104,9 @@ public class LeitorXLS {
 	}
 
 	private void printFrases() {
-		Set<String> chaves = frases.keySet();
+		Set<String> chaves = tweets.keySet();
 		for (String string : chaves) {
-			System.out.println(frases.get(string));
+			System.out.println(tweets.get(string));
 		}
 	}
 
@@ -115,67 +118,4 @@ public class LeitorXLS {
 		return string;
 	}
 
-	private void citacoesPalavras() throws RowsExceededException,
-			WriteException {
-		Collection<String> conjuntoPalavras = frases.values();
-		HashMap<String, Integer> palavrasMencoes = new HashMap<String, Integer>();
-		int i = 0;
-		String novaPalavra = "";
-		for (String string : conjuntoPalavras) {
-			i = 0;
-			novaPalavra = "";
-			while (i < string.length()) {
-				while (string.charAt(i) != ' ') {
-					novaPalavra += string.charAt(i);
-					i++;
-				}
-				if (novaPalavra.contains(" ") == false
-						&& novaPalavra.length() > 0) {
-					if (palavrasMencoes.get(novaPalavra) == null) {
-						palavrasMencoes.put(novaPalavra, 1);
-					} else {
-						palavrasMencoes.put(novaPalavra,
-								palavrasMencoes.get(novaPalavra) + 1);
-					}
-				}
-				i++;
-				novaPalavra = "";
-			}
-		}
-		printMencoes(palavrasMencoes);
-	}
-
-	private void printMencoes(HashMap<String, Integer> mencoes)
-			throws RowsExceededException, WriteException {
-		
-		File novaPlanilha = new File(
-				"tweetsTeste.xls");
-		WritableWorkbook writableWorkbook;
-		try {
-			writableWorkbook = Workbook.createWorkbook(novaPlanilha);
-			WritableSheet writableSheet = writableWorkbook.createSheet(
-					"Sheet1", 0);
-			Label labelPalavra = new Label(0, 0, "Palavra");
-			Label labelValor = new Label(1, 0, "Valor");
-			writableSheet.addCell(labelPalavra);
-			writableSheet.addCell(labelValor);
-			int i = 1;
-			Set<String> chaves = mencoes.keySet();
-			for (String string : chaves) {
-				System.out.println("Chave: " + string + "-Valor: "
-						+ mencoes.get(string));
-				if (string.contains(" ") == false && string.length() > 0) {
-					writableSheet.addCell(new Label(0, i, string));
-					writableSheet.addCell(new Label(1, i, mencoes.get(string)
-							+ ""));
-					i++;
-				}
-			}
-			writableWorkbook.write();
-			writableWorkbook.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-	}
 }
