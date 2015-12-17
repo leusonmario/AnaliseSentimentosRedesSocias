@@ -7,7 +7,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.Normalizer;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -15,9 +14,6 @@ import jxl.Sheet;
 import jxl.Workbook;
 import jxl.WorkbookSettings;
 import jxl.read.biff.BiffException;
-import jxl.write.Label;
-import jxl.write.WritableSheet;
-import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 import jxl.write.biff.RowsExceededException;
 
@@ -78,7 +74,10 @@ public class LeitorXLS {
 			umaFrase = umaFrase
 					.replaceAll(" " + string + " ", " ")
 					.replaceAll(
-							"[\\[\\]|.,+\\-\\~?!:;\"^'\\/*()\n]|\\S*@\\S*|http\\S*|(kk+)|(KK+)|(kk+)K",
+							"([k|K]+[K|k]*[k|K]+)|([z|Z]+[Z|z]*[z|Z]+)"
+							+ "|(http|https):\\/\\/([\\w-]+\\.)+[\\w-]+(\\/[\\w- ./?%&=]*)"
+							+ "|(\\S*@*)([\\w-]+\\.)+[\\w-]+(\\/[\\w- ./?%&=]*)?|(\\s\\d+\\s)|(\\s+\\W+\\s+)"
+							+ "|(\\v+)|(\\s\\W+\\s)",
 							"");
 		}
 
