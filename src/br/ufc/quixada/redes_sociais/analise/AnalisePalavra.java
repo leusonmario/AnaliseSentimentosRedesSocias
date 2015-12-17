@@ -1,4 +1,4 @@
-package br.ufc.quixada.redes_sociais.leitor;
+package br.ufc.quixada.redes_sociais.analise;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,60 +13,47 @@ import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 import jxl.write.biff.RowsExceededException;
 
-public class AnaliseHashtag {
-	private HashMap<String, Integer> hashtagsMencoes;
-
-	public AnaliseHashtag() {
-		this.hashtagsMencoes = new HashMap<String, Integer>();
-	}
+public class AnalisePalavra {
 	
-	public void analisarHashtags(HashMap<String, String> tweets) throws RowsExceededException, WriteException{
-		mencoesHashtags(tweets);
+	public HashMap<String, Integer> analisaPalavras(HashMap<String, String> tweets) throws RowsExceededException, WriteException{
+		return citacoesPalavras(tweets);
 	}
 
-	private void mencoesHashtags(HashMap<String, String> tweets)
-			throws RowsExceededException, WriteException {
+	private HashMap<String, Integer> citacoesPalavras(HashMap<String, String> tweets) throws RowsExceededException,
+			WriteException {
 		Collection<String> conjuntoPalavras = tweets.values();
 		HashMap<String, Integer> palavrasMencoes = new HashMap<String, Integer>();
 		int i = 0;
 		String novaPalavra = "";
-		boolean espacoVazio = false;
 		for (String string : conjuntoPalavras) {
 			i = 0;
 			novaPalavra = "";
 			while (i < string.length()) {
-				if (string.charAt(i) == '#') {
-					do {
-						if (string.charAt(i) != ' ') {
-							novaPalavra += string.charAt(i);
-							i++;
-						} else {
-							espacoVazio = true;
-						}
-					} while (string.charAt(i) != '#' && espacoVazio == false);
-					espacoVazio = false;
+				while (string.charAt(i) != ' ') {
+					novaPalavra += string.charAt(i);
+					i++;
 				}
-				if (novaPalavra.length() > 1) {
+				if (novaPalavra.contains(" ") == false
+						&& novaPalavra.length() > 0) {
 					if (palavrasMencoes.get(novaPalavra) == null) {
 						palavrasMencoes.put(novaPalavra, 1);
 					} else {
 						palavrasMencoes.put(novaPalavra,
 								palavrasMencoes.get(novaPalavra) + 1);
 					}
-
 				}
 				i++;
 				novaPalavra = "";
 			}
 		}
-		printMencoesHashtags(palavrasMencoes);
+		//printMencoes(palavrasMencoes);
+		return palavrasMencoes;
 	}
 
-	private void printMencoesHashtags(HashMap<String, Integer> mencoes)
+	private void printMencoes(HashMap<String, Integer> mencoes)
 			throws RowsExceededException, WriteException {
-		Collection<String> chaves = mencoes.keySet();
 
-		File novaPlanilha = new File("Assets/Hashtag/tweetsHashtagsMencoes.xls");
+		File novaPlanilha = new File("Assets/Palavra/tweetsMencaoPalavra.xls");
 		WritableWorkbook writableWorkbook;
 		try {
 			writableWorkbook = Workbook.createWorkbook(novaPlanilha);
@@ -77,7 +64,7 @@ public class AnaliseHashtag {
 			writableSheet.addCell(labelPalavra);
 			writableSheet.addCell(labelValor);
 			int i = 1;
-
+			Set<String> chaves = mencoes.keySet();
 			for (String string : chaves) {
 				System.out.println("Chave: " + string + "-Valor: "
 						+ mencoes.get(string));
