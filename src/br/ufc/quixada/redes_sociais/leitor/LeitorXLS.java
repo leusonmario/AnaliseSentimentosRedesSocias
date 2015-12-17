@@ -59,7 +59,8 @@ public class LeitorXLS {
 
 			}
 			printFrases();
-			citacoesPalavras();
+			// citacoesPalavras();
+			citacaoesHashtags();
 		} catch (BiffException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -82,10 +83,8 @@ public class LeitorXLS {
 
 	private void carregaPalavrasInuteis() {
 		try {
-			String content = new String(
-					Files.readAllBytes(Paths
-							.get("stopwords.txt")),
-					StandardCharsets.ISO_8859_1);
+			String content = new String(Files.readAllBytes(Paths
+					.get("Assets/stopwords.txt")), StandardCharsets.ISO_8859_1);
 
 			String[] palavrasFile = content.split(",");
 
@@ -113,6 +112,46 @@ public class LeitorXLS {
 			string = string.replaceAll("[^\\p{ASCII}]", "");
 		}
 		return string;
+	}
+
+	private void citacaoesHashtags() throws RowsExceededException,
+			WriteException {
+		Collection<String> conjuntoPalavras = frases.values();
+		HashMap<String, Integer> hashtagsMencoes = new HashMap<String, Integer>();
+		int i = 0;
+		boolean vazio = false;
+		String novaHashtag = "";
+		for (String string : conjuntoPalavras) {
+			i = 0;
+			novaHashtag = "";
+			while (i < string.length()) {
+				if (string.charAt(i) == '#') {
+					do {
+					//while (string.charAt(i) != ' ') {
+						if(string.charAt(i) != ' '){
+						novaHashtag += string.charAt(i);
+						i++;
+						}else{
+							vazio = true;
+						}
+					//}
+					} while(string.charAt(i) != '#' && vazio == false);
+					vazio = false;
+					if (novaHashtag.contains(" ") == false
+							&& novaHashtag.length() > 0) {
+						if (hashtagsMencoes.get(novaHashtag) == null) {
+							hashtagsMencoes.put(novaHashtag, 1);
+						} else {
+							hashtagsMencoes.put(novaHashtag,
+									hashtagsMencoes.get(novaHashtag) + 1);
+						}
+					}
+				}
+				i++;
+				novaHashtag = "";
+			}
+		}
+		printHashtags(hashtagsMencoes);
 	}
 
 	private void citacoesPalavras() throws RowsExceededException,
@@ -145,11 +184,19 @@ public class LeitorXLS {
 		printMencoes(palavrasMencoes);
 	}
 
+	private void printHashtags(HashMap<String, Integer> mencoes) {
+		Collection<String> chaves = mencoes.keySet();
+
+		for (String string : chaves) {
+			System.out.println("Chave: " + string + " - Valor: "
+					+ mencoes.get(string));
+		}
+	}
+
 	private void printMencoes(HashMap<String, Integer> mencoes)
 			throws RowsExceededException, WriteException {
-		
-		File novaPlanilha = new File(
-				"tweetsTeste.xls");
+
+		File novaPlanilha = new File("Assets/tweetsTeste.xls");
 		WritableWorkbook writableWorkbook;
 		try {
 			writableWorkbook = Workbook.createWorkbook(novaPlanilha);

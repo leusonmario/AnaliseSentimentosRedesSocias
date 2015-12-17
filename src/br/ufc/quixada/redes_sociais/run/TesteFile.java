@@ -8,7 +8,7 @@ public class TesteFile {
 
 	public static void main(String[] args) throws RowsExceededException, WriteException {
 		LeitorXLS leitor = new LeitorXLS();
-		leitor.carregaArquivo("tweets-famosos.xls");
+		leitor.carregaArquivo("Assets/tweets-nao-golpe-vem-pra-rua.xls");
 		leitor.processaArquivo();
 	}
 
