@@ -1,17 +1,7 @@
 package br.ufc.quixada.redes_sociais.analise;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Set;
-
-import jxl.Workbook;
-import jxl.write.Label;
-import jxl.write.WritableSheet;
-import jxl.write.WritableWorkbook;
-import jxl.write.WriteException;
-import jxl.write.biff.RowsExceededException;
 
 public class AnaliseHashtagPalavra {
 	private HashMap<String, Integer> mencoesPalavraVPR;

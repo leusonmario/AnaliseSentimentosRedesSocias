@@ -7,22 +7,18 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.Normalizer;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 
-import br.ufc.quixada.redes_sociais.analise.AnaliseHashtag;
-import br.ufc.quixada.redes_sociais.analise.AnaliseHashtagPalavra;
-import br.ufc.quixada.redes_sociais.analise.AnalisePalavra;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.WorkbookSettings;
 import jxl.read.biff.BiffException;
-import jxl.write.Label;
-import jxl.write.WritableSheet;
-import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 import jxl.write.biff.RowsExceededException;
+import br.ufc.quixada.redes_sociais.analise.AnaliseHashtag;
+import br.ufc.quixada.redes_sociais.analise.AnaliseHashtagPalavra;
+import br.ufc.quixada.redes_sociais.analise.AnalisePalavra;
 
 public class LeitorXLS {
 	private File file;
