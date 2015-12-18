@@ -29,7 +29,7 @@ public class AnaliseHashtagPalavra {
 				analisaPalavraTweet(tweets.get(string), this.mencaoPalavraNaoVaiTerGolpe);
 			}
 		}
-		EscreveArquivoDL escreve = new EscreveArquivoDL();
+		EscreveArquivo escreve = new EscreveArquivo();
 		escreve.gravarTweet(mencaoHashtagVemPraRua,
 				"Assets/Hashtag/VemPraRua/nuvemHashtagVemPraRua.txt");
 		escreve.gravarTweet(mencaoHashtagNaoVaiTerGolpe,

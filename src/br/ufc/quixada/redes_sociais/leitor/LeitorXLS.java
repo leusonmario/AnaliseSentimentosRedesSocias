@@ -18,7 +18,7 @@ import jxl.write.biff.RowsExceededException;
 import br.ufc.quixada.redes_sociais.analise.AnaliseHashtag;
 import br.ufc.quixada.redes_sociais.analise.AnaliseHashtagPalavra;
 import br.ufc.quixada.redes_sociais.analise.AnalisePalavra;
-import br.ufc.quixada.redes_sociais.analise.EscreveArquivoDL;
+import br.ufc.quixada.redes_sociais.analise.EscreveArquivo;
 
 public class LeitorXLS {
 	private File file;
@@ -26,14 +26,14 @@ public class LeitorXLS {
 	private ArrayList<String> palavrasInuteis;
 	private AnaliseHashtag analiseHashtag;
 	private AnalisePalavra analisePalavra;
-	private EscreveArquivoDL escreve;
+	private EscreveArquivo escreve;
 
 	public LeitorXLS() {
 		this.tweets = new HashMap<String, String>();
 		this.palavrasInuteis = new ArrayList<String>();
 		this.analiseHashtag = new AnaliseHashtag();
 		this.analisePalavra = new AnalisePalavra();
-		this.escreve = new EscreveArquivoDL();
+		this.escreve = new EscreveArquivo();
 		carregaPalavrasInuteis();
 	}
 
