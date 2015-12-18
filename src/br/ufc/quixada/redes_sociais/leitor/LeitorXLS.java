@@ -8,7 +8,6 @@ import java.nio.file.Paths;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Set;
 
 import jxl.Sheet;
 import jxl.Workbook;
@@ -19,6 +18,7 @@ import jxl.write.biff.RowsExceededException;
 import br.ufc.quixada.redes_sociais.analise.AnaliseHashtag;
 import br.ufc.quixada.redes_sociais.analise.AnaliseHashtagPalavra;
 import br.ufc.quixada.redes_sociais.analise.AnalisePalavra;
+import br.ufc.quixada.redes_sociais.analise.EscreveArquivoDL;
 
 public class LeitorXLS {
 	private File file;
@@ -26,16 +26,14 @@ public class LeitorXLS {
 	private ArrayList<String> palavrasInuteis;
 	private AnaliseHashtag analiseHashtag;
 	private AnalisePalavra analisePalavra;
-	private HashMap<String, Integer> hashtagsMencoes;
-	private HashMap<String, Integer> palavrasMencoes;
+	private EscreveArquivoDL escreve;
 
 	public LeitorXLS() {
 		this.tweets = new HashMap<String, String>();
 		this.palavrasInuteis = new ArrayList<String>();
 		this.analiseHashtag = new AnaliseHashtag();
 		this.analisePalavra = new AnalisePalavra();
-		this.hashtagsMencoes = new HashMap<String, Integer>();
-		this.palavrasMencoes = new HashMap<String, Integer>();
+		this.escreve = new EscreveArquivoDL();
 		carregaPalavrasInuteis();
 	}
 
@@ -53,10 +51,10 @@ public class LeitorXLS {
 			Sheet sheet = workbook.getSheet(0);
 			int linhas = sheet.getRows();
 
-			for (int i = 0; i < linhas; i++) {
-				if (tweets.containsKey(sheet.getCell(3, i).getContents()) == false) {
+			for (int i = 1; i < linhas; i++) {
+				if (!tweets.containsKey(sheet.getCell(1, i).getContents())) {
 					tweets.put(
-							sheet.getCell(3, i).getContents(),
+							sheet.getCell(1, i).getContents(),
 							removePalavras(" "
 									+ removeAcentos(sheet.getCell(12, i)
 											.getContents()))
@@ -65,9 +63,11 @@ public class LeitorXLS {
 				}
 
 			}
-			printFrases();
-			palavrasMencoes = analisePalavra.analisaPalavras(tweets);
-			hashtagsMencoes= analiseHashtag.analisarHashtags(tweets);
+
+			escreve.gravarTweet(analisePalavra.analisaPalavras(tweets),
+					"Assets/Palavra/nuvemDePalavra.txt");
+			escreve.gravarTweet(analiseHashtag.analisarHashtags(tweets),
+					"Assets/Hashtag/nuvemDeHashtag.txt");
 			AnaliseHashtagPalavra analiseHashtagPalavra = new AnaliseHashtagPalavra();
 			analiseHashtagPalavra.analiseMencoesPalavraHashtag(tweets);
 		} catch (BiffException e) {
@@ -78,18 +78,19 @@ public class LeitorXLS {
 
 	}
 
-	private String removePalavras(String umaFrase) {
+	private String removePalavras(String tweet) {
 		for (String string : palavrasInuteis) {
-			umaFrase = umaFrase
+			tweet = tweet
 					.replaceAll(" " + string + " ", " ")
 					.replaceAll(
 							"([k|K]+[K|k]*[k|K]+)|([z|Z]+[Z|z]*[z|Z]+)"
-							+ "|(http|https):\\/\\/([\\w-]+\\.)+[\\w-]+(\\/[\\w- ./?%&=]*)"
-							+ "|(\\S*@*)([\\w-]+\\.)+[\\w-]+(\\/[\\w- ./?%&=]*)?|(\\s\\d+\\s)|(\\s+\\W+\\s+)"
-							+ "|(\\v+)|(\\s\\W+\\s)|(\\s\\w\\s)|(@\\w*)|[^\\w#\\s]","");
+									+ "|(http|https):\\/\\/([\\w-]+\\.)+[\\w-]+(\\/[\\w- ./?%&=]*)"
+									+ "|(\\S*@*)([\\w-]+\\.)+[\\w-]+(\\/[\\w- ./?%&=]*)?|(\\s\\d+\\s)|(\\s+\\W+\\s+)"
+									+ "|(\\v+)|(\\s\\W+\\s)|(\\s\\w\\s)|(@\\w*)|[^\\w#\\s]",
+							"");
 		}
 
-		return umaFrase;
+		return tweet;
 	}
 
 	private void carregaPalavrasInuteis() {
@@ -107,13 +108,6 @@ public class LeitorXLS {
 			}
 		} catch (IOException e1) {
 			e1.printStackTrace();
-		}
-	}
-
-	private void printFrases() {
-		Set<String> chaves = tweets.keySet();
-		for (String string : chaves) {
-			System.out.println(tweets.get(string));
 		}
 	}
 

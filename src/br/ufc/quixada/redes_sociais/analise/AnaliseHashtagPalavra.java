@@ -4,12 +4,16 @@ import java.util.Collection;
 import java.util.HashMap;
 
 public class AnaliseHashtagPalavra {
-	private HashMap<String, Integer> mencoesPalavraVPR;
-	private HashMap<String, Integer> mencoesPalavraNVTG;
+	private HashMap<String, Integer> mencaoHashtagVemPraRua;
+	private HashMap<String, Integer> mencaoHashtagNaoVaiTerGolpe;
+	private HashMap<String, Integer> mencaoPalavraVemPraRua;
+	private HashMap<String, Integer> mencaoPalavraNaoVaiTerGolpe;
 
 	public AnaliseHashtagPalavra() {
-		this.mencoesPalavraVPR = new HashMap<String, Integer>();
-		this.mencoesPalavraNVTG = new HashMap<String, Integer>();
+		this.mencaoHashtagVemPraRua = new HashMap<String, Integer>();
+		this.mencaoHashtagNaoVaiTerGolpe = new HashMap<String, Integer>();
+		this.mencaoPalavraVemPraRua = new HashMap<String, Integer>();
+		this.mencaoPalavraNaoVaiTerGolpe = new HashMap<String, Integer>();
 	}
 
 	public void analiseMencoesPalavraHashtag(HashMap<String, String> tweets) {
@@ -17,57 +21,53 @@ public class AnaliseHashtagPalavra {
 
 		for (String string : idTweets) {
 			if (tweets.get(string).contains("#vemprarua")) {
-				analisaPalavraTweet(tweets.get(string), "#vemprarua",
-						this.mencoesPalavraVPR);
+				analisaHashtagTweet(tweets.get(string), "#vemprarua", this.mencaoHashtagVemPraRua);
+				analisaPalavraTweet(tweets.get(string), this.mencaoPalavraVemPraRua);
 			}
 			if (tweets.get(string).contains("#naovaitergolpe")) {
-				analisaPalavraTweet(tweets.get(string), "#naovaitergolpe",
-						this.mencoesPalavraNVTG);
+				analisaHashtagTweet(tweets.get(string), "#naovaitergolpe", this.mencaoHashtagNaoVaiTerGolpe);
+				analisaPalavraTweet(tweets.get(string), this.mencaoPalavraNaoVaiTerGolpe);
 			}
 		}
-		// printMencoes(mencoesPalavraVPR);
-		// printMencoes(mencoesPalavraNVTG);
-		printMencoesHashtag(mencoesPalavraVPR, "VemPraRua");
-		printMencoesHashtag(mencoesPalavraNVTG, "NaoVaiTerGolpe");
+		EscreveArquivoDL escreve = new EscreveArquivoDL();
+		escreve.gravarTweet(mencaoHashtagVemPraRua,
+				"Assets/Hashtag/VemPraRua/nuvemHashtagVemPraRua.txt");
+		escreve.gravarTweet(mencaoHashtagNaoVaiTerGolpe,
+				"Assets/Hashtag/NaoVaiTerGolpe/nuvemHashtagNaoVaiTerGolpe.txt");
+		escreve.gravarTweet(mencaoPalavraVemPraRua,
+				"Assets/Hashtag/VemPraRua/nuvemPalavraVemPraRua.txt");
+		escreve.gravarTweet(mencaoPalavraNaoVaiTerGolpe,
+				"Assets/Hashtag/NaoVaiTerGolpe/nuvemPalavraNaoVaiTerGolpe.txt");
 	}
 
-	private void analisaPalavraTweet(String tweet, String hashtag,
+	private void analisaHashtagTweet(String tweet, String hashtag,
 			HashMap<String, Integer> mencoes) {
-		int i = 0;
-		String novaPalavra = "";
-		tweet = tweet.replaceAll(hashtag, "");
-		while (i < tweet.length()) {
-			while (tweet.charAt(i) != ' ') {
-				novaPalavra += tweet.charAt(i);
-				i++;
-			}
-			if (novaPalavra.contains(" ") == false && novaPalavra.length() > 0) {
-				if (mencoes.get(novaPalavra) == null) {
-					mencoes.put(novaPalavra, 1);
+		tweet = tweet.replaceAll(hashtag+"\\s+|\\n+", "");
+		String[] mencoesTweet = tweet.split("(\\s|\\n|(?=(#(\\w)+)))");
+		
+		for (String mencaoTweet : mencoesTweet) {
+			if (mencaoTweet.length() > 0 &&  mencaoTweet.charAt(0) == '#') {
+				if (mencoes.get(mencaoTweet) == null) {
+					mencoes.put(mencaoTweet, 1);
 				} else {
-					mencoes.put(novaPalavra, mencoes.get(novaPalavra) + 1);
+					mencoes.put(mencaoTweet, mencoes.get(mencaoTweet) + 1);
 				}
 			}
-			novaPalavra = "";
-			i++;
-		}
-
-	}
-
-	private void printMencoes(HashMap<String, Integer> mencoes) {
-		Collection<String> palavra = mencoes.keySet();
-		System.out.println("*******************************");
-		for (String string : palavra) {
-			System.out.println(string + ";" + mencoes.get(string));
 		}
 	}
-
-	private void printMencoesHashtag(HashMap<String, Integer> mencoes,
-			String hashtag) {
-		Collection<String> palavra = mencoes.keySet();
-		System.out.println("*******************************");
-		for (String string : palavra) {
-			System.out.println(hashtag + ";" + string);
+	
+	private void analisaPalavraTweet(String tweet,
+			HashMap<String, Integer> mencoes) {
+		String[] mencoesTweet = tweet.split("(\\s|\\n|(?=#))");
+		
+		for (String mencaoTweet : mencoesTweet) {
+			if (mencaoTweet.length() > 0 &&  mencaoTweet.charAt(0) != '#') {
+				if (mencoes.get(mencaoTweet) == null) {
+					mencoes.put(mencaoTweet, 1);
+				} else {
+					mencoes.put(mencaoTweet, mencoes.get(mencaoTweet) + 1);
+				}
+			}
 		}
 	}
 
