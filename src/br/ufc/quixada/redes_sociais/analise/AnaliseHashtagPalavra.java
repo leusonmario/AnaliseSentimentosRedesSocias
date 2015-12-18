@@ -35,9 +35,9 @@ public class AnaliseHashtagPalavra {
 		escreve.gravarTweet(mencaoHashtagNaoVaiTerGolpe,
 				"Assets/Hashtag/NaoVaiTerGolpe/nuvemHashtagNaoVaiTerGolpe.txt");
 		escreve.gravarTweet(mencaoPalavraVemPraRua,
-				"Assets/Hashtag/VemPraRua/nuvemPalavraVemPraRua.txt");
+				"Assets/Palavra/VemPraRua/nuvemPalavraVemPraRua.txt");
 		escreve.gravarTweet(mencaoPalavraNaoVaiTerGolpe,
-				"Assets/Hashtag/NaoVaiTerGolpe/nuvemPalavraNaoVaiTerGolpe.txt");
+				"Assets/Palavra/NaoVaiTerGolpe/nuvemPalavraNaoVaiTerGolpe.txt");
 	}
 
 	private void analisaHashtagTweet(String tweet, String hashtag,

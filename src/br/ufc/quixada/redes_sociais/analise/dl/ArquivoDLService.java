@@ -9,7 +9,8 @@ public class ArquivoDLService {
 	private LeitorTXT leitoTxt;
 	private EscreveArquivo escreveArquivo;
 	private String caminhoEscrita;
-	private HashMap<Integer, String> associacoes;
+	private HashMap<String, Integer> associacoesH;
+	private HashMap<String, Integer> associacoesP;
 	private String hashtag;
 	
 	public ArquivoDLService(String pathEntrada, String pathSaida, String hash) {
@@ -24,12 +25,21 @@ public class ArquivoDLService {
 		escreveArquivoDl();
 	}
 	
+	public void processamentoPalavras(){
+		associacoesP = leitoTxt.lerPalavrasArquivo();
+		escreveArquivoDlPalavra();
+	}
+	
 	private void lerArquivoDl(){
-		associacoes = leitoTxt.lerPalavrasArquivo();
+		associacoesH = leitoTxt.lerPalavrasArquivo();
 	}
 	
 	private void escreveArquivoDl(){
-		escreveArquivo.gravaDL(associacoes, caminhoEscrita, hashtag);
+		escreveArquivo.gravaDlHash(associacoesH, caminhoEscrita, hashtag);
+	}
+	
+	private void escreveArquivoDlPalavra(){
+		escreveArquivo.gravaDlHash(associacoesP, caminhoEscrita, hashtag);
 	}
 	
 }

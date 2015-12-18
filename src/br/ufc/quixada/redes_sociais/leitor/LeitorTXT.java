@@ -16,14 +16,14 @@ public class LeitorTXT {
 	public LeitorTXT(String caminho) {
 		this.caminho = Paths.get(caminho);
 	}
-	public HashMap<Integer, String> lerPalavrasArquivo(){
-		HashMap<Integer, String> pares = new HashMap<Integer, String>();
+	public HashMap<String, Integer > lerPalavrasArquivo(){
+		HashMap<String, Integer > pares = new HashMap<String, Integer >();
 		try (BufferedReader leitor = Files.newBufferedReader(caminho, utf8)) {
 			String teste = null;
-			int i = 0;
 			while ((teste = leitor.readLine()) != null) {
 				String[] linha = teste.split(";");
-				pares.put(i++, linha[0]);
+				Integer temp = Integer.parseInt(linha[1]);
+				pares.put(linha[0], temp);
 			}
 		}catch (IOException e) {
 			e.printStackTrace();
