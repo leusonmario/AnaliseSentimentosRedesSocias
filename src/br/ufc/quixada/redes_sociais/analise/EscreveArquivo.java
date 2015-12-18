@@ -25,11 +25,11 @@ public class EscreveArquivo {
 		}
 	}
 	
-	public void gravaDL(HashMap<String, String> associacoes, String path) {
+	public void gravaDL(HashMap<Integer, String> associacoes, String path, String hash) {
 		caminhoDL = Paths.get(path);
 		try(BufferedWriter escritor = Files.newBufferedWriter(caminhoDL,utf8)){
-			for (String palavra : associacoes.keySet()) {
-				escritor.write(palavra + " " + associacoes.get(palavra) +"\n");	
+			for (Integer index : associacoes.keySet()) {
+				escritor.write(hash+ " " + associacoes.get(index) +"\n");	
 			}			
 		} catch (IOException e) {			
 			e.printStackTrace();
